@@ -1,17 +1,15 @@
-# Template: worker-typescript
+# fear-and-greed-skill
 
-[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cloudflare/templates/tree/main/worker-typescript)
+카카오톡 챗봇 스킬서버 for 공포 탐욕 지수([Fear & Greed Index](https://edition.cnn.com/markets/fear-and-greed))
 
-A batteries included template for kick starting a TypeScript Cloudflare worker project.
-
-## Setup
-
-To create a `my-project` directory using this template, run:
+## Develop
 
 ```sh
-$ npx wrangler generate my-project worker-typescript
-# or
-$ yarn wrangler generate my-project worker-typescript
-# or
-$ pnpm wrangler generate my-project worker-typescript
+pnpm run dev
+```
+Start dev server (localhost:8787)
+
+## Deploy
+```sh
+pnpm run deploy
 ```

@@ -27,6 +27,27 @@ export interface Env {
 
 export default {
 	async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
-		return new Response('Hello World!');
+
+		const FGI_JSON_PATH = "https://sh-cho.github.io/fear-and-greed-notifier/fgi_output.json";
+
+    async function gatherResponse(response) {
+      const { headers } = response;
+      const contentType = headers.get("content-type") || "";
+      if (contentType.includes("application/json")) {
+        return JSON.stringify(await response.json());
+      }
+      return response.text();
+    }
+
+		const init = {
+			headers: {
+				"content-type": "application/json;charset=UTF-8",
+			},
+		};
+
+		const response = await fetch(FGI_JSON_PATH, init);
+		const fgi = await gatherResponse(response);
+
+		return new Response(fgi, init);
 	},
 };

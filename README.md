@@ -1,4 +1,4 @@
-# fear-and-greed-skill
+# kakao-skill-fear-and-greed
 
 카카오톡 챗봇 스킬서버 for 공포 탐욕 지수([Fear & Greed Index](https://edition.cnn.com/markets/fear-and-greed))
 

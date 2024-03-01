@@ -1,12 +1,4 @@
-/**
- * Welcome to Cloudflare Workers! This is your first worker.
- *
- * - Run `npm run dev` in your terminal to start a development server
- * - Open a browser tab at http://localhost:8787/ to see your worker in action
- * - Run `npm run deploy` to publish your worker
- *
- * Learn more at https://developers.cloudflare.com/workers/
- */
+import { SimpleText, SkillResponse, Template } from 'kakao-chatbot-templates';
 
 export interface Env {
 	// Example binding to KV. Learn more at https://developers.cloudflare.com/workers/runtime-apis/kv/
@@ -25,19 +17,21 @@ export interface Env {
 	// MY_QUEUE: Queue;
 }
 
+// req/res 형식 참고: https://kakaobusiness.gitbook.io/main/tool/chatbot/main_notions/setting_parameter#payload
+
 export default {
 	async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
 
 		const FGI_JSON_PATH = "https://sh-cho.github.io/fear-and-greed-notifier/fgi_output.json";
 
-    async function gatherResponse(response) {
-      const { headers } = response;
-      const contentType = headers.get("content-type") || "";
-      if (contentType.includes("application/json")) {
-        return JSON.stringify(await response.json());
-      }
-      return response.text();
-    }
+		async function gatherResponse(response) {
+			const { headers } = response;
+			const contentType = headers.get("content-type") || "";
+			if (contentType.includes("application/json")) {
+				return JSON.stringify(await response.json(), null, 2);
+			}
+			return response.text();
+		}
 
 		const init = {
 			headers: {
@@ -48,6 +42,13 @@ export default {
 		const response = await fetch(FGI_JSON_PATH, init);
 		const fgi = await gatherResponse(response);
 
-		return new Response(fgi, init);
+		const template = new Template([
+			new SimpleText(fgi)
+		]);
+		const skillResponseJSON = JSON.stringify(new SkillResponse(template).render());
+
+		console.log(skillResponseJSON);
+
+		return new Response(skillResponseJSON, init);
 	},
 };
